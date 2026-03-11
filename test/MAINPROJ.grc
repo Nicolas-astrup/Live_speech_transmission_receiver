@@ -85,7 +85,7 @@ blocks:
     bus_structure: null
     coordinate: [344, 8.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -126,7 +126,44 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [952, 200.0]
+    coordinate: [1000, 160.0]
+    rotation: 0
+    state: enabled
+- name: analog_random_source_x_0
+  id: analog_random_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    max: '255'
+    maxoutbuf: '0'
+    min: '1'
+    minoutbuf: '0'
+    num_samps: '50'
+    repeat: 'False'
+    type: byte
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [312, 296.0]
+    rotation: 0
+    state: disabled
+- name: audio_sink_0
+  id: audio_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    device_name: ''
+    num_inputs: '1'
+    ok_to_block: 'True'
+    samp_rate: '48000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2480, 1712.0]
     rotation: 0
     state: enabled
 - name: audio_source_0
@@ -165,6 +202,42 @@ blocks:
     coordinate: [1872, 1300.0]
     rotation: 0
     state: enabled
+- name: blocks_file_sink_0
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: C:\Users\haako\OneDrive\Skrivebord\poo.bin.bin
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1296, 68.0]
+    rotation: 0
+    state: disabled
+- name: blocks_file_sink_1
+  id: blocks_file_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    append: 'False'
+    comment: ''
+    file: C:\Users\haako\OneDrive\Skrivebord\piss.bin
+    type: byte
+    unbuffered: 'False'
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1552, 1164.0]
+    rotation: 0
+    state: disabled
 - name: blocks_message_debug_0
   id: blocks_message_debug
   parameters:
@@ -198,17 +271,37 @@ blocks:
     coordinate: [584, 548.0]
     rotation: 0
     state: enabled
+- name: blocks_repack_bits_bb_0
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'False'
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    k: '8'
+    l: '1'
+    len_tag_key: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [784, 1136.0]
+    rotation: 0
+    state: enabled
 - name: blocks_repack_bits_bb_1
   id: blocks_repack_bits_bb
   parameters:
     affinity: ''
     alias: ''
-    align_output: 'True'
+    align_output: 'False'
     comment: ''
     endianness: gr.GR_MSB_FIRST
     k: '1'
     l: '8'
-    len_tag_key: packet_len
+    len_tag_key: '"packet_len"'
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -216,6 +309,26 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [368, 1456.0]
+    rotation: 0
+    state: enabled
+- name: blocks_repack_bits_bb_1_0
+  id: blocks_repack_bits_bb
+  parameters:
+    affinity: ''
+    alias: ''
+    align_output: 'False'
+    comment: ''
+    endianness: gr.GR_MSB_FIRST
+    k: '8'
+    l: '1'
+    len_tag_key: packet_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [960, 1632.0]
     rotation: 0
     state: enabled
 - name: blocks_short_to_float_0
@@ -235,6 +348,25 @@ blocks:
     coordinate: [1688, 1668.0]
     rotation: 0
     state: enabled
+- name: blocks_stream_to_tagged_stream_0_1
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: '"packet_len"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: '6'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [776, 352.0]
+    rotation: 0
+    state: disabled
 - name: blocks_stream_to_vector_0
   id: blocks_stream_to_vector
   parameters:
@@ -250,13 +382,34 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1032, 1568.0]
+    coordinate: [1104, 1568.0]
     rotation: 0
     state: enabled
+- name: blocks_throttle2_0
+  id: blocks_throttle2
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    ignoretag: 'True'
+    limit: auto
+    maximum: '0.1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    samples_per_second: samp_rate
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [568, 288.0]
+    rotation: 0
+    state: disabled
 - name: codec2488_0
   id: codec2488
   parameters:
-    Decimate: '1'
+    Decimate: '6'
     Interpolate: '1'
     affinity: ''
     alias: ''
@@ -268,7 +421,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [376, 212.0]
+    coordinate: [392, 100.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_decoder_cb_1
@@ -284,7 +437,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 1092.0]
+    coordinate: [2184, 644.0]
     rotation: 0
     state: enabled
 - name: digital_constellation_modulator_0
@@ -338,7 +491,7 @@ blocks:
     minoutbuf: '0'
     order: len(constel.points())
     use_snr: 'False'
-    w: '0.5'
+    w: '0.01'
   states:
     bus_sink: false
     bus_source: false
@@ -378,7 +531,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [792, 1072.0]
+    coordinate: [2560, 608.0]
     rotation: 0
     state: enabled
 - name: digital_symbol_sync_xx_0
@@ -388,8 +541,8 @@ blocks:
     alias: ''
     comment: ''
     constellation: constel.base()
-    damping: '1.0'
-    loop_bw: '0.045'
+    damping: '0.707'
+    loop_bw: '0.01'
     max_dev: '1.5'
     maxoutbuf: '0'
     minoutbuf: '0'
@@ -442,7 +595,7 @@ blocks:
     gain: '1'
     maxoutbuf: '0'
     minoutbuf: '0'
-    ntaps: 11*samp_rate
+    ntaps: '88'
     nthreads: '1'
     samp_rate: samp_rate
     sym_rate: samp_rate/sps
@@ -951,6 +1104,26 @@ blocks:
     coordinate: [2112, 1208.0]
     rotation: 0
     state: enabled
+- name: rational_resampler_xxx_0
+  id: rational_resampler_xxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    decim: '1'
+    fbw: '0.400'
+    interp: '6'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    taps: '[]'
+    type: fff
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2176, 1808.0]
+    rotation: 0
+    state: enabled
 - name: soapy_plutosdr_sink_0
   id: soapy_plutosdr_sink
   parameters:
@@ -969,7 +1142,7 @@ blocks:
     bus_structure: null
     coordinate: [1312, 448.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: soapy_plutosdr_source_0
   id: soapy_plutosdr_source
   parameters:
@@ -991,7 +1164,7 @@ blocks:
     bus_structure: null
     coordinate: [104, 824.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
@@ -1028,7 +1201,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2136, 708.0]
+    coordinate: [2864, 660.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_4
@@ -1041,7 +1214,20 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1560, 1076.0]
+    coordinate: [1704, 1036.0]
+    rotation: 0
+    state: enabled
+- name: virtual_sink_5
+  id: virtual_sink
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: gabagoo
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1248, 364.0]
     rotation: 0
     state: enabled
 - name: virtual_source_0
@@ -1057,6 +1243,19 @@ blocks:
     coordinate: [0, 388.0]
     rotation: 0
     state: enabled
+- name: virtual_source_1
+  id: virtual_source
+  parameters:
+    alias: ''
+    comment: ''
+    stream_id: gabagoo
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [120, 740.0]
+    rotation: 0
+    state: enabled
 - name: virtual_source_2
   id: virtual_source
   parameters:
@@ -1067,7 +1266,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [40, 1092.0]
+    coordinate: [384, 1148.0]
     rotation: 0
     state: enabled
 - name: virtual_source_3
@@ -1096,39 +1295,51 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1312, 1532.0]
+    coordinate: [1400, 1540.0]
     rotation: 0
     state: enabled
 
 connections:
+- [CRC32_header_0, '0', blocks_file_sink_0, '0']
 - [CRC32_header_0, '0', virtual_sink_0, '0']
+- [analog_random_source_x_0, '0', blocks_throttle2_0, '0']
 - [audio_source_0, '0', codec2488_0, '0']
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_1_0_0, '0']
 - [blocks_multiply_const_vxx_0, '0', filter_fft_rrc_filter_1, '0']
+- [blocks_repack_bits_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
 - [blocks_repack_bits_bb_1, '0', digital_crc32_bb_1, '0']
+- [blocks_repack_bits_bb_1_0, '0', blocks_stream_to_vector_0, '0']
 - [blocks_short_to_float_0, '0', qtgui_time_sink_x_0, '0']
+- [blocks_short_to_float_0, '0', rational_resampler_xxx_0, '0']
 - [blocks_short_to_float_0, '0', virtual_sink_1, '0']
+- [blocks_stream_to_tagged_stream_0_1, '0', CRC32_header_0, '0']
 - [blocks_stream_to_vector_0, '0', vocoder_codec2_decode_ps_0, '0']
+- [blocks_throttle2_0, '0', blocks_stream_to_tagged_stream_0_1, '0']
 - [codec2488_0, '0', CRC32_header_0, '0']
 - [digital_constellation_decoder_cb_1, '0', digital_diff_decoder_bb_0, '0']
 - [digital_constellation_modulator_0, '0', blocks_multiply_const_vxx_0, '0']
+- [digital_correlate_access_code_xx_ts_0, '0', blocks_file_sink_1, '0']
 - [digital_correlate_access_code_xx_ts_0, '0', virtual_sink_4, '0']
+- [digital_costas_loop_cc_0, '0', digital_constellation_decoder_cb_1, '0']
 - [digital_costas_loop_cc_0, '0', qtgui_const_sink_x_0, '1']
 - [digital_costas_loop_cc_0, '0', qtgui_time_sink_x_1_0, '0']
-- [digital_costas_loop_cc_0, '0', virtual_sink_3, '0']
-- [digital_crc32_bb_1, '0', blocks_char_to_float_0, '0']
-- [digital_crc32_bb_1, '0', blocks_stream_to_vector_0, '0']
+- [digital_crc32_bb_1, '0', blocks_repack_bits_bb_1_0, '0']
 - [digital_crc32_bb_1, '0', pdu_tagged_stream_to_pdu_0, '0']
-- [digital_diff_decoder_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
+- [digital_diff_decoder_bb_0, '0', virtual_sink_3, '0']
 - [digital_symbol_sync_xx_0, '0', digital_costas_loop_cc_0, '0']
 - [digital_symbol_sync_xx_0, '0', qtgui_const_sink_x_0, '0']
 - [filter_fft_rrc_filter_0, '0', digital_symbol_sync_xx_0, '0']
 - [filter_fft_rrc_filter_1, '0', soapy_plutosdr_sink_0, '0']
+- [filter_fft_rrc_filter_1, '0', virtual_sink_5, '0']
 - [pdu_tagged_stream_to_pdu_0, pdus, blocks_message_debug_0, print]
+- [rational_resampler_xxx_0, '0', audio_sink_0, '0']
 - [soapy_plutosdr_source_0, '0', filter_fft_rrc_filter_0, '0']
 - [soapy_plutosdr_source_0, '0', qtgui_time_sink_x_0_0, '0']
 - [virtual_source_0, '0', digital_constellation_modulator_0, '0']
-- [virtual_source_2, '0', digital_constellation_decoder_cb_1, '0']
+- [virtual_source_1, '0', filter_fft_rrc_filter_0, '0']
+- [virtual_source_1, '0', qtgui_time_sink_x_0_0, '0']
+- [virtual_source_2, '0', blocks_char_to_float_0, '0']
+- [virtual_source_2, '0', blocks_repack_bits_bb_0, '0']
 - [virtual_source_3, '0', blocks_repack_bits_bb_1, '0']
 - [vocoder_codec2_decode_ps_0, '0', blocks_short_to_float_0, '0']
 
