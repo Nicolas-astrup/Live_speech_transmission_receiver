@@ -199,6 +199,18 @@ blocks:
     coordinate: [1464, 20.0]
     rotation: 0
     state: enabled
+- name: rx_on
+  id: variable
+  parameters:
+    comment: ''
+    value: 1-tx_on
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1840, 40.0]
+    rotation: 0
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -263,6 +275,53 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1128, 136.0]
+    rotation: 0
+    state: enabled
+- name: tx_on
+  id: variable_qtgui_toggle_switch
+  parameters:
+    cellalignment: '1'
+    comment: ''
+    gui_hint: ''
+    initPressed: 'False'
+    label: TX/RX switch
+    outputmsgname: value
+    position: '4'
+    pressed: '1'
+    released: '0'
+    switchOffBackground: gray
+    switchOnBackground: green
+    type: int
+    value: '0'
+    verticalalignment: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2696, 88.0]
+    rotation: 0
+    state: disabled
+- name: tx_on
+  id: variable_qtgui_toggle_button_msg
+  parameters:
+    comment: ''
+    gui_hint: ''
+    initPressed: 'False'
+    label: tx/rx button
+    outputmsgname: value
+    pressBackgroundColor: default
+    pressFontColor: default
+    pressed: '1'
+    relBackgroundColor: default
+    relFontColor: default
+    released: '0'
+    type: int
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2976, 228.0]
     rotation: 0
     state: enabled
 - name: audio_sink_0
@@ -334,6 +393,42 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [2112, 628.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_vxx_1
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: tx_on
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2760, 524.0]
+    rotation: 0
+    state: enabled
+- name: blocks_multiply_const_vxx_1_0
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: 1-tx_on
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [576, 980.0]
     rotation: 0
     state: enabled
 - name: blocks_repack_bits_bb_1
@@ -1526,7 +1621,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [528, 984.0]
+    coordinate: [304, 952.0]
     rotation: 0
     state: enabled
 - name: virtual_sink_0_0
@@ -1667,6 +1762,9 @@ connections:
 - [audio_source_0, '0', codec2488_0, '0']
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_1_0_0, '0']
 - [blocks_multiply_const_vxx_0, '0', filter_fft_rrc_filter_1, '0']
+- [blocks_multiply_const_vxx_1, '0', soapy_plutosdr_sink_0, '0']
+- [blocks_multiply_const_vxx_1_0, '0', filter_fft_rrc_filter_0, '0']
+- [blocks_multiply_const_vxx_1_0, '0', qtgui_time_sink_x_0_0, '0']
 - [blocks_repack_bits_bb_1, '0', digital_crc32_bb_1, '0']
 - [blocks_repack_bits_bb_1_0, '0', blocks_stream_to_vector_0, '0']
 - [blocks_short_to_float_0, '0', qtgui_time_sink_x_0_1, '0']
@@ -1699,10 +1797,9 @@ connections:
 - [digital_symbol_sync_xx_0, '0', qtgui_const_sink_x_0, '0']
 - [digital_symbol_sync_xx_0, '0', qtgui_eye_sink_x_0, '0']
 - [filter_fft_rrc_filter_0, '0', digital_symbol_sync_xx_0, '0']
-- [filter_fft_rrc_filter_1, '0', soapy_plutosdr_sink_0, '0']
+- [filter_fft_rrc_filter_1, '0', blocks_multiply_const_vxx_1, '0']
 - [rational_resampler_xxx_0, '0', audio_sink_0, '0']
-- [soapy_plutosdr_source_0, '0', filter_fft_rrc_filter_0, '0']
-- [soapy_plutosdr_source_0, '0', qtgui_time_sink_x_0_0, '0']
+- [soapy_plutosdr_source_0, '0', blocks_multiply_const_vxx_1_0, '0']
 - [virtual_source_2, '0', digital_constellation_decoder_cb_1, '0']
 - [virtual_source_3, '0', blocks_repack_bits_bb_1, '0']
 - [virtual_source_5, '0', blocks_tagged_stream_mux_0, '1']
