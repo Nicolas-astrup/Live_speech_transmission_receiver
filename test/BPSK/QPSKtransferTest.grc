@@ -209,6 +209,18 @@ blocks:
     coordinate: [240, 1840.0]
     rotation: 0
     state: enabled
+- name: mod_sync_word
+  id: variable
+  parameters:
+    comment: ''
+    value: '0'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1984, 8.0]
+    rotation: 0
+    state: enabled
 - name: payload_size
   id: variable
   parameters:
@@ -237,7 +249,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '8'
+    value: '64'
   states:
     bus_sink: false
     bus_source: false
@@ -249,7 +261,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '8'
+    value: '64'
   states:
     bus_sink: false
     bus_source: false
@@ -538,7 +550,7 @@ blocks:
     bus_structure: null
     coordinate: [176, 468.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_char_to_float_0
   id: blocks_char_to_float
   parameters:
@@ -591,7 +603,7 @@ blocks:
     bus_structure: null
     coordinate: [2760, 524.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_multiply_const_vxx_1_0
   id: blocks_multiply_const_vxx
   parameters:
@@ -609,7 +621,7 @@ blocks:
     bus_structure: null
     coordinate: [576, 980.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_repack_bits_bb_1
   id: blocks_repack_bits_bb
   parameters:
@@ -704,7 +716,7 @@ blocks:
     bus_structure: null
     coordinate: [864, 760.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_stream_to_vector_0
   id: blocks_stream_to_vector
   parameters:
@@ -723,6 +735,25 @@ blocks:
     coordinate: [1600, 1760.0]
     rotation: 0
     state: enabled
+- name: blocks_tag_debug_0
+  id: blocks_tag_debug
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    display: 'True'
+    filter: '""'
+    name: ''
+    num_inputs: '1'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [664, 1412.0]
+    rotation: 0
+    state: enabled
 - name: blocks_tagged_stream_mux_0
   id: blocks_tagged_stream_mux
   parameters:
@@ -732,7 +763,7 @@ blocks:
     lengthtagname: packet_len
     maxoutbuf: '0'
     minoutbuf: '0'
-    ninputs: '4'
+    ninputs: '3'
     tag_preserve_head_pos: '0'
     type: byte
     vlen: '1'
@@ -770,7 +801,7 @@ blocks:
     repeat: 'True'
     tags: '[]'
     type: byte
-    vector: '[0xc0, 0xaf]'
+    vector: mod_sync_word
     vlen: '1'
   states:
     bus_sink: false
@@ -798,7 +829,7 @@ blocks:
     bus_structure: null
     coordinate: [440, 748.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_wavfile_source_0
   id: blocks_wavfile_source
   parameters:
@@ -816,11 +847,11 @@ blocks:
     bus_structure: null
     coordinate: [136, 576.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: codec2488_0
   id: codec2488
   parameters:
-    Decimate: '1'
+    Decimate: '6'
     Interpolate: '1'
     affinity: ''
     alias: ''
@@ -871,6 +902,26 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1760, 592.0]
+    rotation: 0
+    state: enabled
+- name: digital_corr_est_cc_0
+  id: digital_corr_est_cc
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    mark_delay: '1'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    sps: sps
+    symbols: mod_sync_word
+    threshold: '0.9'
+    threshold_method: digital.THRESHOLD_ABSOLUTE
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [824, 908.0]
     rotation: 0
     state: enabled
 - name: digital_correlate_access_code_xx_ts_0
@@ -1797,7 +1848,7 @@ blocks:
     bus_structure: null
     coordinate: [2992, 488.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: soapy_plutosdr_source_0
   id: soapy_plutosdr_source
   parameters:
@@ -1819,7 +1870,7 @@ blocks:
     bus_structure: null
     coordinate: [304, 952.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
@@ -1832,7 +1883,7 @@ blocks:
     bus_structure: null
     coordinate: [3080, 704.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_sink_0_0
   id: virtual_sink
   parameters:
@@ -1910,7 +1961,7 @@ blocks:
     bus_structure: null
     coordinate: [128, 852.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_source_2
   id: virtual_source
   parameters:
@@ -1985,12 +2036,13 @@ connections:
 - [FEC_ENCODE_0, '0', digital_protocol_formatter_bb_0, '0']
 - [FEC_ENCODE_0, '0', virtual_sink_2_0, '0']
 - [FEC_decoder_0, '0', blocks_repack_bits_bb_1, '0']
+- [FEC_decoder_0, '0', blocks_tag_debug_0, '0']
 - [Interleaver_simple_0, '0', blocks_tagged_stream_mux_0, '2']
 - [audio_source_0, '0', codec2488_0, '0']
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_1_0_0, '0']
 - [blocks_multiply_const_vxx_0, '0', filter_fft_rrc_filter_1, '0']
 - [blocks_multiply_const_vxx_1, '0', soapy_plutosdr_sink_0, '0']
-- [blocks_multiply_const_vxx_1_0, '0', filter_fft_rrc_filter_0, '0']
+- [blocks_multiply_const_vxx_1_0, '0', digital_corr_est_cc_0, '0']
 - [blocks_multiply_const_vxx_1_0, '0', qtgui_time_sink_x_0_0, '0']
 - [blocks_repack_bits_bb_1, '0', digital_crc32_bb_1, '0']
 - [blocks_repack_bits_bb_1_0, '0', blocks_char_to_float_0, '0']
@@ -1999,7 +2051,6 @@ connections:
 - [blocks_short_to_float_0, '0', rational_resampler_xxx_0, '0']
 - [blocks_short_to_float_0, '0', virtual_sink_1, '0']
 - [blocks_stream_to_tagged_stream_0_0_0_0, '0', blocks_tagged_stream_mux_0, '0']
-- [blocks_stream_to_tagged_stream_0_0_0_0_0, '0', blocks_tagged_stream_mux_0, '3']
 - [blocks_stream_to_vector_0, '0', vocoder_codec2_decode_ps_0, '0']
 - [blocks_tagged_stream_mux_0, '0', digital_constellation_modulator_0, '0']
 - [blocks_unpack_k_bits_bb_0, '0', digital_correlate_access_code_xx_ts_0, '0']
@@ -2010,6 +2061,7 @@ connections:
 - [digital_constellation_decoder_cb_1, '0', digital_diff_decoder_bb_0, '0']
 - [digital_constellation_modulator_0, '0', blocks_multiply_const_vxx_0, '0']
 - [digital_constellation_modulator_0, '0', qtgui_time_sink_x_0, '0']
+- [digital_corr_est_cc_0, '0', filter_fft_rrc_filter_0, '0']
 - [digital_correlate_access_code_xx_ts_0, '0', virtual_sink_4, '0']
 - [digital_costas_loop_cc_0, '0', qtgui_const_sink_x_0, '1']
 - [digital_costas_loop_cc_0, '0', qtgui_time_sink_x_1_0, '0']
