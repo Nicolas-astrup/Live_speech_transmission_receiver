@@ -130,6 +130,18 @@ blocks:
     coordinate: [184, 2040.0]
     rotation: 0
     state: enabled
+- name: eb
+  id: variable
+  parameters:
+    comment: ''
+    value: '0.35'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2224, 112.0]
+    rotation: 0
+    state: enabled
 - name: enc_cc
   id: variable_cc_encoder_def
   parameters:
@@ -210,15 +222,17 @@ blocks:
     rotation: 0
     state: enabled
 - name: mod_sync_word
-  id: variable
+  id: variable_modulate_vector
   parameters:
     comment: ''
-    value: '[0xE4, 0x35]'
+    data: preamble_gold
+    mod: rxmod
+    taps: '[1]'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1984, 8.0]
+    coordinate: [1960, 96.0]
     rotation: 0
     state: enabled
 - name: payload_size
@@ -255,6 +269,18 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [712, 152.0]
+    rotation: 0
+    state: enabled
+- name: preamble_gold
+  id: variable
+  parameters:
+    comment: ''
+    value: '[0xE4, 0x35]'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1984, 8.0]
     rotation: 0
     state: enabled
 - name: preamble_size
@@ -313,6 +339,18 @@ blocks:
     bus_source: false
     bus_structure: null
     coordinate: [1840, 40.0]
+    rotation: 0
+    state: enabled
+- name: rxmod
+  id: variable
+  parameters:
+    comment: ''
+    value: digital.generic_mod(qpsk, False, sps, True, eb, False, False)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [2136, 0.0]
     rotation: 0
     state: enabled
 - name: samp_rate
@@ -801,7 +839,7 @@ blocks:
     repeat: 'True'
     tags: '[]'
     type: byte
-    vector: mod_sync_word
+    vector: preamble_gold
     vlen: '1'
   states:
     bus_sink: false
