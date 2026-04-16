@@ -345,7 +345,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: digital.generic_mod(qpsk, False, sps, True, eb, False, False)
+    value: digital.generic_mod(qpsk, True, sps, True, excess_bw, False, False)
   states:
     bus_sink: false
     bus_source: false
@@ -641,7 +641,7 @@ blocks:
     bus_structure: null
     coordinate: [2760, 524.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_multiply_const_vxx_1_0
   id: blocks_multiply_const_vxx
   parameters:
@@ -659,7 +659,7 @@ blocks:
     bus_structure: null
     coordinate: [576, 980.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_repack_bits_bb_1
   id: blocks_repack_bits_bb
   parameters:
@@ -791,7 +791,7 @@ blocks:
     bus_structure: null
     coordinate: [664, 1412.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: blocks_tagged_stream_mux_0
   id: blocks_tagged_stream_mux
   parameters:
@@ -959,7 +959,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [824, 908.0]
+    coordinate: [1192, 924.0]
     rotation: 0
     state: enabled
 - name: digital_correlate_access_code_xx_ts_0
@@ -1132,7 +1132,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1160, 912.0]
+    coordinate: [832, 864.0]
     rotation: 0
     state: enabled
 - name: filter_fft_rrc_filter_1
@@ -1296,7 +1296,7 @@ blocks:
     color9: blue
     comment: ''
     ctrlpanel: 'False'
-    entags: 'True'
+    entags: 'False'
     grid: 'False'
     gui_hint: ''
     label1: Signal 1
@@ -1586,7 +1586,7 @@ blocks:
     color9: dark green
     comment: ''
     ctrlpanel: 'False'
-    entags: 'True'
+    entags: 'False'
     grid: 'False'
     gui_hint: ''
     label1: Signal 1
@@ -1683,7 +1683,7 @@ blocks:
     color9: dark green
     comment: ''
     ctrlpanel: 'False'
-    entags: 'True'
+    entags: 'False'
     grid: 'True'
     gui_hint: '[4, 0, 2, 1]'
     label1: Real
@@ -1886,7 +1886,7 @@ blocks:
     bus_structure: null
     coordinate: [2992, 488.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: soapy_plutosdr_source_0
   id: soapy_plutosdr_source
   parameters:
@@ -1908,7 +1908,7 @@ blocks:
     bus_structure: null
     coordinate: [304, 952.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
@@ -1921,7 +1921,7 @@ blocks:
     bus_structure: null
     coordinate: [3080, 704.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: virtual_sink_0_0
   id: virtual_sink
   parameters:
@@ -1999,7 +1999,7 @@ blocks:
     bus_structure: null
     coordinate: [128, 852.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: virtual_source_2
   id: virtual_source
   parameters:
@@ -2080,7 +2080,7 @@ connections:
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_1_0_0, '0']
 - [blocks_multiply_const_vxx_0, '0', filter_fft_rrc_filter_1, '0']
 - [blocks_multiply_const_vxx_1, '0', soapy_plutosdr_sink_0, '0']
-- [blocks_multiply_const_vxx_1_0, '0', digital_corr_est_cc_0, '0']
+- [blocks_multiply_const_vxx_1_0, '0', filter_fft_rrc_filter_0, '0']
 - [blocks_multiply_const_vxx_1_0, '0', qtgui_time_sink_x_0_0, '0']
 - [blocks_repack_bits_bb_1, '0', digital_crc32_bb_1, '0']
 - [blocks_repack_bits_bb_1_0, '0', blocks_char_to_float_0, '0']
@@ -2099,7 +2099,7 @@ connections:
 - [digital_constellation_decoder_cb_1, '0', digital_diff_decoder_bb_0, '0']
 - [digital_constellation_modulator_0, '0', blocks_multiply_const_vxx_0, '0']
 - [digital_constellation_modulator_0, '0', qtgui_time_sink_x_0, '0']
-- [digital_corr_est_cc_0, '0', filter_fft_rrc_filter_0, '0']
+- [digital_corr_est_cc_0, '0', digital_symbol_sync_xx_0, '0']
 - [digital_correlate_access_code_xx_ts_0, '0', virtual_sink_4, '0']
 - [digital_costas_loop_cc_0, '0', qtgui_const_sink_x_0, '1']
 - [digital_costas_loop_cc_0, '0', qtgui_time_sink_x_1_0, '0']
@@ -2112,7 +2112,7 @@ connections:
 - [digital_symbol_sync_xx_0, '0', digital_costas_loop_cc_0, '0']
 - [digital_symbol_sync_xx_0, '0', qtgui_const_sink_x_0, '0']
 - [digital_symbol_sync_xx_0, '0', qtgui_eye_sink_x_0, '0']
-- [filter_fft_rrc_filter_0, '0', digital_symbol_sync_xx_0, '0']
+- [filter_fft_rrc_filter_0, '0', digital_corr_est_cc_0, '0']
 - [filter_fft_rrc_filter_1, '0', blocks_multiply_const_vxx_1, '0']
 - [filter_fft_rrc_filter_1, '0', virtual_sink_0, '0']
 - [rational_resampler_xxx_0, '0', audio_sink_0, '0']
