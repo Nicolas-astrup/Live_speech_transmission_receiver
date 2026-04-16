@@ -104,7 +104,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [2760, 1176.0]
+    coordinate: [2760, 1208.0]
     rotation: 0
     state: enabled
 - name: dec_cc
@@ -275,7 +275,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '[0xE4, 0x35]'
+    value: '[0x1F, 0x35]'
   states:
     bus_sink: false
     bus_source: false
@@ -292,7 +292,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [560, 152.0]
+    coordinate: [552, 152.0]
     rotation: 0
     state: enabled
 - name: qpsk
@@ -588,7 +588,7 @@ blocks:
     bus_structure: null
     coordinate: [176, 468.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_char_to_float_0
   id: blocks_char_to_float
   parameters:
@@ -641,7 +641,7 @@ blocks:
     bus_structure: null
     coordinate: [2760, 524.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_multiply_const_vxx_1_0
   id: blocks_multiply_const_vxx
   parameters:
@@ -659,7 +659,7 @@ blocks:
     bus_structure: null
     coordinate: [576, 980.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: blocks_repack_bits_bb_1
   id: blocks_repack_bits_bb
   parameters:
@@ -885,11 +885,11 @@ blocks:
     bus_structure: null
     coordinate: [136, 576.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: codec2488_0
   id: codec2488
   parameters:
-    Decimate: '1'
+    Decimate: '6'
     Interpolate: '1'
     affinity: ''
     alias: ''
@@ -1886,7 +1886,7 @@ blocks:
     bus_structure: null
     coordinate: [2992, 488.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: soapy_plutosdr_source_0
   id: soapy_plutosdr_source
   parameters:
@@ -1906,9 +1906,9 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [304, 952.0]
+    coordinate: [272, 952.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: virtual_sink_0
   id: virtual_sink
   parameters:
@@ -1921,7 +1921,7 @@ blocks:
     bus_structure: null
     coordinate: [3080, 704.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_sink_0_0
   id: virtual_sink
   parameters:
@@ -1999,7 +1999,7 @@ blocks:
     bus_structure: null
     coordinate: [128, 852.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: virtual_source_2
   id: virtual_source
   parameters:
