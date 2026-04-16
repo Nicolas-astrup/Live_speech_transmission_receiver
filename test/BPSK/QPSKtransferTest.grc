@@ -263,7 +263,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '64'
+    value: '2'
   states:
     bus_sink: false
     bus_source: false
@@ -275,7 +275,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '[0xE4, 0x35, 0xD2, 0x6C,0x9B, 0x71, 0x4F, 0xA8]'
+    value: '[0x55,0xAA]'
   states:
     bus_sink: false
     bus_source: false
@@ -287,7 +287,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '8'
+    value: '64'
   states:
     bus_sink: false
     bus_source: false
@@ -545,12 +545,12 @@ blocks:
     label: MTU
     short_id: ''
     type: intx
-    value: '1500'
+    value: '80'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [296, 8.0]
+    coordinate: [264, 16.0]
     rotation: 0
     state: enabled
 - name: audio_sink_0
@@ -586,7 +586,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [176, 468.0]
+    coordinate: [112, 404.0]
     rotation: 0
     state: enabled
 - name: blocks_char_to_float_0
@@ -660,6 +660,24 @@ blocks:
     coordinate: [576, 980.0]
     rotation: 0
     state: enabled
+- name: blocks_multiply_const_vxx_2
+  id: blocks_multiply_const_vxx
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    const: '20'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: float
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [280, 288.0]
+    rotation: 0
+    state: enabled
 - name: blocks_repack_bits_bb_1
   id: blocks_repack_bits_bb
   parameters:
@@ -670,7 +688,7 @@ blocks:
     endianness: gr.GR_LSB_FIRST
     k: '1'
     l: '8'
-    len_tag_key: packet_len
+    len_tag_key: packet
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -690,7 +708,7 @@ blocks:
     endianness: gr.GR_MSB_FIRST
     k: '8'
     l: '1'
-    len_tag_key: packet_len
+    len_tag_key: packet
     maxoutbuf: '0'
     minoutbuf: '0'
   states:
@@ -773,25 +791,6 @@ blocks:
     coordinate: [1600, 1760.0]
     rotation: 0
     state: enabled
-- name: blocks_tag_debug_0
-  id: blocks_tag_debug
-  parameters:
-    affinity: ''
-    alias: ''
-    comment: ''
-    display: 'True'
-    filter: '""'
-    name: ''
-    num_inputs: '1'
-    type: byte
-    vlen: '1'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [664, 1412.0]
-    rotation: 0
-    state: disabled
 - name: blocks_tagged_stream_mux_0
   id: blocks_tagged_stream_mux
   parameters:
@@ -961,7 +960,7 @@ blocks:
     bus_structure: null
     coordinate: [1192, 924.0]
     rotation: 0
-    state: disabled
+    state: enabled
 - name: digital_correlate_access_code_xx_ts_0
   id: digital_correlate_access_code_xx_ts
   parameters:
@@ -1024,7 +1023,7 @@ blocks:
     alias: ''
     check: 'True'
     comment: ''
-    lengthtagname: packet_len
+    lengthtagname: packet
     maxoutbuf: '0'
     minoutbuf: '0'
     packed: 'True'
@@ -2074,14 +2073,14 @@ connections:
 - [FEC_ENCODE_0, '0', digital_protocol_formatter_bb_0, '0']
 - [FEC_ENCODE_0, '0', virtual_sink_2_0, '0']
 - [FEC_decoder_0, '0', blocks_repack_bits_bb_1, '0']
-- [FEC_decoder_0, '0', blocks_tag_debug_0, '0']
 - [Interleaver_simple_0, '0', blocks_tagged_stream_mux_0, '2']
-- [audio_source_0, '0', codec2488_0, '0']
+- [audio_source_0, '0', blocks_multiply_const_vxx_2, '0']
 - [blocks_char_to_float_0, '0', qtgui_time_sink_x_1_0_0, '0']
 - [blocks_multiply_const_vxx_0, '0', filter_fft_rrc_filter_1, '0']
 - [blocks_multiply_const_vxx_1, '0', soapy_plutosdr_sink_0, '0']
 - [blocks_multiply_const_vxx_1_0, '0', filter_fft_rrc_filter_0, '0']
 - [blocks_multiply_const_vxx_1_0, '0', qtgui_time_sink_x_0_0, '0']
+- [blocks_multiply_const_vxx_2, '0', codec2488_0, '0']
 - [blocks_repack_bits_bb_1, '0', digital_crc32_bb_1, '0']
 - [blocks_repack_bits_bb_1_0, '0', blocks_char_to_float_0, '0']
 - [blocks_repack_bits_bb_1_0, '0', blocks_stream_to_vector_0, '0']
@@ -2113,7 +2112,6 @@ connections:
 - [digital_symbol_sync_xx_0, '0', qtgui_const_sink_x_0, '0']
 - [digital_symbol_sync_xx_0, '0', qtgui_eye_sink_x_0, '0']
 - [filter_fft_rrc_filter_0, '0', digital_corr_est_cc_0, '0']
-- [filter_fft_rrc_filter_0, '0', digital_symbol_sync_xx_0, '0']
 - [filter_fft_rrc_filter_1, '0', blocks_multiply_const_vxx_1, '0']
 - [filter_fft_rrc_filter_1, '0', virtual_sink_0, '0']
 - [rational_resampler_xxx_0, '0', audio_sink_0, '0']
