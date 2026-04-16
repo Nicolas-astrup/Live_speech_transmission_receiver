@@ -275,7 +275,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '[0x1F, 0x35]'
+    value: '[0xE4, 0x35, 0xD2, 0x6C,0x9B, 0x71, 0x4F, 0xA8]'
   states:
     bus_sink: false
     bus_source: false
@@ -287,7 +287,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '2'
+    value: '8'
   states:
     bus_sink: false
     bus_source: false
@@ -961,7 +961,7 @@ blocks:
     bus_structure: null
     coordinate: [1192, 924.0]
     rotation: 0
-    state: enabled
+    state: disabled
 - name: digital_correlate_access_code_xx_ts_0
   id: digital_correlate_access_code_xx_ts
   parameters:
@@ -2113,6 +2113,7 @@ connections:
 - [digital_symbol_sync_xx_0, '0', qtgui_const_sink_x_0, '0']
 - [digital_symbol_sync_xx_0, '0', qtgui_eye_sink_x_0, '0']
 - [filter_fft_rrc_filter_0, '0', digital_corr_est_cc_0, '0']
+- [filter_fft_rrc_filter_0, '0', digital_symbol_sync_xx_0, '0']
 - [filter_fft_rrc_filter_1, '0', blocks_multiply_const_vxx_1, '0']
 - [filter_fft_rrc_filter_1, '0', virtual_sink_0, '0']
 - [rational_resampler_xxx_0, '0', audio_sink_0, '0']
