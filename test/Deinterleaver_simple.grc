@@ -1,0 +1,181 @@
+options:
+  parameters:
+    author: haakon
+    catch_exceptions: 'True'
+    category: '[GRC Hier Blocks]'
+    cmake_opt: ''
+    comment: ''
+    copyright: ''
+    description: ''
+    gen_cmake: 'On'
+    gen_linking: dynamic
+    generate_options: hb
+    hier_block_src_path: '.:'
+    id: Deinterleaver
+    max_nouts: '0'
+    output_language: python
+    placement: (0,0)
+    qt_qss_theme: ''
+    realtime_scheduling: ''
+    run: 'True'
+    run_command: '{python} -u {filename}'
+    run_options: prompt
+    sizing_mode: fixed
+    thread_safe_setters: ''
+    title: Deinterleaver_self
+    window_size: (1000,1000)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [8, 8]
+    rotation: 0
+    state: enabled
+
+blocks:
+- name: Columns
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Columns
+    short_id: ''
+    type: ''
+    value: '20'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [696, 20.0]
+    rotation: 0
+    state: enabled
+- name: Rows
+  id: parameter
+  parameters:
+    alias: ''
+    comment: ''
+    hide: none
+    label: Rows
+    short_id: ''
+    type: ''
+    value: '8'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [552, 36.0]
+    rotation: 0
+    state: enabled
+- name: blocks_stream_to_vector_0_0
+  id: blocks_stream_to_vector
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '160'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [392, 248.0]
+    rotation: 0
+    state: enabled
+- name: blocks_vector_to_stream_1_0
+  id: blocks_vector_to_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_items: '160'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [704, 264.0]
+    rotation: 0
+    state: enabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):\n\
+      \    def __init__(self, rows=8, cols=20):\n        self.rows = rows\n      \
+      \  self.cols = cols\n        self.N = rows * cols\n\n        gr.sync_block.__init__(\n\
+      \            self,\n            name=\"bit_deinterleaver_160\",\n          \
+      \  in_sig=[(np.uint8, self.N)],\n            out_sig=[(np.uint8, self.N)]\n\
+      \        )\n\n    def work(self, input_items, output_items):\n        inv =\
+      \ input_items[0]\n        outv = output_items[0]\n\n        for i in range(len(inv)):\n\
+      \            frame = np.array(inv[i], copy=False).reshape((self.cols, self.rows))\n\
+      \            outv[i][:] = frame.T.reshape(self.N)\n\n        return len(outv)"
+    affinity: ''
+    alias: ''
+    cols: Columns
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    rows: Rows
+  states:
+    _io_cache: ('bit_deinterleaver_160', 'blk', [('rows', '8'), ('cols', '20')], [('0',
+      'byte', 160)], [('0', 'byte', 160)], '', ['cols', 'rows'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [464, 360.0]
+    rotation: 0
+    state: enabled
+- name: pad_sink_0
+  id: pad_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: Bit out
+    num_streams: '1'
+    optional: 'False'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1080, 260.0]
+    rotation: 0
+    state: enabled
+- name: pad_source_0
+  id: pad_source
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    label: Bit in
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    num_streams: '1'
+    optional: 'False'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [144, 276.0]
+    rotation: 0
+    state: enabled
+
+connections:
+- [blocks_stream_to_vector_0_0, '0', epy_block_1, '0']
+- [blocks_vector_to_stream_1_0, '0', pad_sink_0, '0']
+- [epy_block_1, '0', blocks_vector_to_stream_1_0, '0']
+- [pad_source_0, '0', blocks_stream_to_vector_0_0, '0']
+
+metadata:
+  file_format: 1
+  grc_version: 3.10.12.0
