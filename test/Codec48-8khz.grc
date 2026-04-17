@@ -110,7 +110,7 @@ blocks:
     alias: ''
     bits_per_chunk: '1'
     comment: ''
-    endianness: gr.GR_LSB_FIRST
+    endianness: gr.GR_MSB_FIRST
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
@@ -130,7 +130,7 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    num_items: '64'
+    num_items: '48'
     type: byte
     vlen: '1'
   states:
@@ -241,7 +241,7 @@ blocks:
     comment: ''
     maxoutbuf: '0'
     minoutbuf: '0'
-    mode: codec2.MODE_3200
+    mode: codec2.MODE_2400
   states:
     bus_sink: false
     bus_source: false

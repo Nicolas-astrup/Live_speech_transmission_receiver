@@ -131,7 +131,7 @@ blocks:
     ann: None
     comment: ''
     decoder_list: cc_decoder_def
-    lentagname: packet_len
+    lentagname: packet
     maxoutbuf: '0'
     minoutbuf: '0'
     mtu: MTU
@@ -159,7 +159,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1376, 284.0]
+    coordinate: [1424, 268.0]
     rotation: 0
     state: enabled
 - name: pad_source_0

@@ -67,6 +67,25 @@ blocks:
     coordinate: [552, 36.0]
     rotation: 0
     state: enabled
+- name: blocks_stream_to_tagged_stream_0
+  id: blocks_stream_to_tagged_stream
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    len_tag_key: '"packet"'
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_len: '160'
+    type: byte
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1032, 160.0]
+    rotation: 0
+    state: enabled
 - name: blocks_stream_to_vector_0_0
   id: blocks_stream_to_vector
   parameters:
@@ -100,7 +119,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [704, 264.0]
+    coordinate: [728, 264.0]
     rotation: 0
     state: enabled
 - name: epy_block_1
@@ -146,7 +165,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1080, 260.0]
+    coordinate: [1328, 228.0]
     rotation: 0
     state: enabled
 - name: pad_source_0
@@ -171,8 +190,9 @@ blocks:
     state: enabled
 
 connections:
+- [blocks_stream_to_tagged_stream_0, '0', pad_sink_0, '0']
 - [blocks_stream_to_vector_0_0, '0', epy_block_1, '0']
-- [blocks_vector_to_stream_1_0, '0', pad_sink_0, '0']
+- [blocks_vector_to_stream_1_0, '0', blocks_stream_to_tagged_stream_0, '0']
 - [epy_block_1, '0', blocks_vector_to_stream_1_0, '0']
 - [pad_source_0, '0', blocks_stream_to_vector_0_0, '0']
 
