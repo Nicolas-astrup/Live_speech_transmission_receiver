@@ -131,7 +131,7 @@ blocks:
     ann: None
     comment: ''
     decoder_list: cc_decoder_def
-    lentagname: packet
+    lentagname: packet_len
     maxoutbuf: '0'
     minoutbuf: '0'
     mtu: MTU

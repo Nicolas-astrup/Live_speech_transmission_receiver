@@ -110,7 +110,7 @@ blocks:
     alias: ''
     bits_per_chunk: '1'
     comment: ''
-    endianness: gr.GR_MSB_FIRST
+    endianness: gr.GR_LSB_FIRST
     maxoutbuf: '0'
     minoutbuf: '0'
     num_ports: '1'
