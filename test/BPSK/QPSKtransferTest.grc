@@ -239,7 +239,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '[109, 79]'
+    value: '[109,79]'
   states:
     bus_sink: false
     bus_source: false
@@ -345,7 +345,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '1000000'
+    value: '600000'
   states:
     bus_sink: false
     bus_source: false
@@ -357,7 +357,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '4'
+    value: '8'
   states:
     bus_sink: false
     bus_source: false
@@ -398,7 +398,7 @@ blocks:
     start: '0'
     step: '1'
     stop: '89'
-    value: '60'
+    value: '89'
     widget: counter_slider
   states:
     bus_sink: false
@@ -541,6 +541,69 @@ blocks:
     coordinate: [264, 16.0]
     rotation: 0
     state: enabled
+- name: PER
+  id: qtgui_number_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    autoscale: 'True'
+    avg: '0'
+    color1: ("black", "black")
+    color10: ("black", "black")
+    color2: ("black", "black")
+    color3: ("black", "black")
+    color4: ("black", "black")
+    color5: ("black", "black")
+    color6: ("black", "black")
+    color7: ("black", "black")
+    color8: ("black", "black")
+    color9: ("black", "black")
+    comment: ''
+    factor1: '1'
+    factor10: '1'
+    factor2: '1'
+    factor3: '1'
+    factor4: '1'
+    factor5: '1'
+    factor6: '1'
+    factor7: '1'
+    factor8: '1'
+    factor9: '1'
+    graph_type: qtgui.NUM_GRAPH_HORIZ
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    max: '1'
+    min: '-1'
+    name: '"PER"'
+    nconnections: '1'
+    type: float
+    unit1: ''
+    unit10: ''
+    unit2: ''
+    unit3: ''
+    unit4: ''
+    unit5: ''
+    unit6: ''
+    unit7: ''
+    unit8: ''
+    unit9: ''
+    update_time: '0.10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1624, 2052.0]
+    rotation: 0
+    state: disabled
 - name: audio_sink_0
   id: audio_sink
   parameters:
@@ -671,7 +734,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    const: '1'
+    const: '4'
     maxoutbuf: '0'
     minoutbuf: '0'
     type: float
@@ -1158,6 +1221,97 @@ blocks:
     coordinate: [248, 1464.0]
     rotation: 0
     state: disabled
+- name: epy_block_0_0
+  id: epy_block
+  parameters:
+    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):\n\
+      \    def __init__(self, packet_size=6):\n        gr.sync_block.__init__(\n \
+      \           self,\n            name=\"RX Byte Counter\",\n            in_sig=[np.uint8],\n\
+      \            out_sig=[np.float32]\n        )\n\n        self.total_bytes = 0\n\
+      \        self.packet_size = packet_size\n\n    def work(self, input_items, output_items):\n\
+      \        n = len(input_items[0])\n        out = output_items[0]\n\n        self.total_bytes\
+      \ += n\n\n        # choose one:\n        value = self.total_bytes   / 6    \
+      \        # bytes\n        # value = self.total_bytes / self.packet_size   #\
+      \ packets\n\n        out[:] = float(value)\n\n        return n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_size: '6'
+  states:
+    _io_cache: ('RX Byte Counter', 'blk', [('packet_size', '6')], [('0', 'byte', 1)],
+      [('0', 'float', 1)], '', ['packet_size'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1032, 1800.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_0_0_0
+  id: epy_block
+  parameters:
+    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):\n\
+      \    def __init__(self, packet_size=6):\n        gr.sync_block.__init__(\n \
+      \           self,\n            name=\"RX Byte Counter\",\n            in_sig=[np.uint8],\n\
+      \            out_sig=[np.float32]\n        )\n\n        self.total_bytes = 0\n\
+      \        self.packet_size = packet_size\n\n    def work(self, input_items, output_items):\n\
+      \        n = len(input_items[0])\n        out = output_items[0]\n\n        self.total_bytes\
+      \ += n\n\n        # choose one:\n        value = self.total_bytes   / 6    \
+      \        # bytes\n        # value = self.total_bytes / self.packet_size   #\
+      \ packets\n\n        out[:] = float(value)\n\n        return n"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    packet_size: '10'
+  states:
+    _io_cache: ('RX Byte Counter', 'blk', [('packet_size', '6')], [('0', 'byte', 1)],
+      [('0', 'float', 1)], '', ['packet_size'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [896, 1896.0]
+    rotation: 0
+    state: disabled
+- name: epy_block_1
+  id: epy_block
+  parameters:
+    _source_code: "import numpy as np\nfrom gnuradio import gr\n\nclass blk(gr.sync_block):\n\
+      \    def __init__(self, window_bytes=600):\n        gr.sync_block.__init__(\n\
+      \            self,\n            name=\"PER Window Bytes (FEC in0, CRC in1)\"\
+      ,\n            in_sig=[np.float32, np.float32],\n            out_sig=[np.float32]\n\
+      \        )\n\n        self.window_bytes = int(window_bytes)\n\n        self.prev_fec_bytes\
+      \ = 0\n        self.prev_crc_bytes = 0\n\n        self.win_fec_bytes = 0\n \
+      \       self.win_crc_bytes = 0\n\n        self.per = 0.0\n\n    def work(self,\
+      \ input_items, output_items):\n        fec_now = int(input_items[0][-1])   #\
+      \ input 0 = FEC bytes\n        crc_now = int(input_items[1][-1])   # input 1\
+      \ = CRC good bytes\n        out = output_items[0]\n\n        dfec = fec_now\
+      \ - self.prev_fec_bytes\n        dcrc = crc_now - self.prev_crc_bytes\n\n  \
+      \      self.prev_fec_bytes = fec_now\n        self.prev_crc_bytes = crc_now\n\
+      \n        if dfec < 0: dfec = 0\n        if dcrc < 0: dcrc = 0\n\n        self.win_fec_bytes\
+      \ += dfec\n        self.win_crc_bytes += dcrc\n\n        if self.win_fec_bytes\
+      \ >= self.window_bytes:\n            failed = self.win_fec_bytes - self.win_crc_bytes\n\
+      \            if failed < 0:\n                failed = 0\n\n            self.per\
+      \ = failed / float(self.win_fec_bytes)\n\n            self.win_fec_bytes = 0\n\
+      \            self.win_crc_bytes = 0\n\n        out[:] = self.per\n        return\
+      \ len(out)"
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    window_bytes: '100'
+  states:
+    _io_cache: ('PER Window Bytes (FEC in0, CRC in1)', 'blk', [('window_bytes', '600')],
+      [('0', 'float', 1), ('1', 'float', 1)], [('0', 'float', 1)], '', ['window_bytes'])
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1224, 1960.0]
+    rotation: 0
+    state: disabled
 - name: filter_fft_rrc_filter_0
   id: filter_fft_rrc_filter
   parameters:
@@ -1221,6 +1375,69 @@ blocks:
     coordinate: [440, 1856.0]
     rotation: 0
     state: enabled
+- name: nmrpcts
+  id: qtgui_number_sink
+  parameters:
+    affinity: ''
+    alias: ''
+    autoscale: 'True'
+    avg: '0'
+    color1: ("black", "black")
+    color10: ("black", "black")
+    color2: ("black", "black")
+    color3: ("black", "black")
+    color4: ("black", "black")
+    color5: ("black", "black")
+    color6: ("black", "black")
+    color7: ("black", "black")
+    color8: ("black", "black")
+    color9: ("black", "black")
+    comment: ''
+    factor1: '1'
+    factor10: '1'
+    factor2: '1'
+    factor3: '1'
+    factor4: '1'
+    factor5: '1'
+    factor6: '1'
+    factor7: '1'
+    factor8: '1'
+    factor9: '1'
+    graph_type: qtgui.NUM_GRAPH_HORIZ
+    gui_hint: ''
+    label1: ''
+    label10: ''
+    label2: ''
+    label3: ''
+    label4: ''
+    label5: ''
+    label6: ''
+    label7: ''
+    label8: ''
+    label9: ''
+    max: '1'
+    min: '-1'
+    name: '"Number of packets"'
+    nconnections: '1'
+    type: float
+    unit1: ''
+    unit10: ''
+    unit2: ''
+    unit3: ''
+    unit4: ''
+    unit5: ''
+    unit6: ''
+    unit7: ''
+    unit8: ''
+    unit9: ''
+    update_time: '0.10'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1800, 1924.0]
+    rotation: 0
+    state: disabled
 - name: qtgui_const_sink_x_0
   id: qtgui_const_sink_x
   parameters:
@@ -2007,7 +2224,7 @@ blocks:
     alpha8: '1.0'
     alpha9: '1.0'
     axislabels: 'True'
-    bw: samp_rate
+    bw: samp_rate/100
     color1: '0'
     color10: '0'
     color2: '0'
@@ -2077,27 +2294,27 @@ blocks:
   parameters:
     affinity: ''
     alias: ''
-    bandwidth: '1000000'
+    bandwidth: samp_rate/sps
     center_freq: frequency
     comment: ''
     dev_args: ''
-    gain: '89'
+    gain: tx_on*tx_gain
     samp_rate: samp_rate
     type: fc32
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [3560, 480.0]
+    coordinate: [3568, 476.0]
     rotation: 0
     state: enabled
 - name: soapy_plutosdr_source_0
   id: soapy_plutosdr_source
   parameters:
     affinity: ''
-    agc: 'False'
+    agc: 'True'
     alias: ''
-    bandwidth: '1000000'
+    bandwidth: samp_rate/sps
     center_freq: frequency
     comment: ''
     dev_args: ''
@@ -2291,6 +2508,7 @@ connections:
 - [blocks_multiply_const_vxx_1_0_0, '0', soapy_plutosdr_sink_0, '0']
 - [blocks_multiply_const_vxx_2, '0', codec2488_0, '0']
 - [blocks_repack_bits_bb_1, '0', digital_crc32_bb_1, '0']
+- [blocks_repack_bits_bb_1, '0', epy_block_0_0_0, '0']
 - [blocks_repack_bits_bb_1_0, '0', blocks_char_to_float_0, '0']
 - [blocks_repack_bits_bb_1_0, '0', blocks_stream_to_vector_0, '0']
 - [blocks_short_to_float_0, '0', qtgui_time_sink_x_0_1, '0']
@@ -2321,6 +2539,10 @@ connections:
 - [digital_symbol_sync_xx_0, '0', qtgui_eye_sink_x_0, '0']
 - [epy_block_0, '0', FEC_decoder_0, '0']
 - [epy_block_0, '0', blocks_char_to_float_0_0, '0']
+- [epy_block_0_0, '0', epy_block_1, '1']
+- [epy_block_0_0, '0', nmrpcts, '0']
+- [epy_block_0_0_0, '0', epy_block_1, '0']
+- [epy_block_1, '0', PER, '0']
 - [filter_fft_rrc_filter_0, '0', digital_corr_est_cc_0, '0']
 - [filter_fft_rrc_filter_0, '0', digital_symbol_sync_xx_0, '0']
 - [filter_fft_rrc_filter_1, '0', blocks_stream_to_tagged_stream_0, '0']
