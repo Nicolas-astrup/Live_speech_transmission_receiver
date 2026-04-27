@@ -58,6 +58,7 @@ from gnuradio import audio
 from gnuradio import blocks
 from gnuradio import digital
 from gnuradio import filter
+from gnuradio import eng_notation
 from gnuradio import fec
 from gnuradio.filter import firdes
 from gnuradio import gr
@@ -66,8 +67,6 @@ import signal
 from PyQt5 import Qt
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
-from gnuradio import eng_notation
-from gnuradio import soapy
 from gnuradio import vocoder
 from gnuradio.vocoder import codec2
 import sip
@@ -117,7 +116,7 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.sps = sps = 4
+        self.sps = sps = 8
         self.qpsk = qpsk = digital.constellation_rect([-0.707-0.707j, 0.707-0.707j, +0.707+0.707j, -0.707+0.707j], [0, 1, 3, 2],
         4, 2, 2, 1, 1).base()
         self.excess_bw = excess_bw = 0.35
@@ -125,11 +124,11 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         self.rxmod = rxmod = digital.generic_mod(qpsk, True, sps, True, excess_bw, False, False)
         self.rate = rate = 2
         self.preamble_gold = preamble_gold = [0x55,0xAA]
-        self.polys = polys = [109, 79]
+        self.polys = polys = [109,79]
         self.k = k = 7
-        self.tx_gain = tx_gain = 60
+        self.tx_gain = tx_gain = 89
         self.sym_bw = sym_bw = 0.088
-        self.samp_rate = samp_rate = 1000000
+        self.samp_rate = samp_rate = 600000
         self.rx_on = rx_on = 1-tx_on
         self.preamble_size = preamble_size = 4
         self.payload_size = payload_size = 180
@@ -138,6 +137,7 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         self.frequency = frequency = 865200000
         self.enc_cc = enc_cc = fec.cc_encoder_make((MTU*8),k, rate, polys, 0, fec.CC_TAILBITING, True)
         self.dec_cc = dec_cc = list(map( (lambda a: fec.cc_decoder.make((MTU*8),k, rate, polys, 0, (-1), fec.CC_TAILBITING, True)),range(0,1)))
+        self.data = data = 0
         self.costas_bw = costas_bw = 0.06
         self.constel = constel = digital.constellation_qpsk().base()
         self.constel.set_npwr(1.0)
@@ -155,7 +155,7 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         self.tx_on = _tx_on_toggle_button
 
         self.top_layout.addWidget(_tx_on_toggle_button)
-        self._sym_bw_range = qtgui.Range(0.02, 0.09, 0.001, 0.088, 200)
+        self._sym_bw_range = qtgui.Range(0.02, 0.12, 0.001, 0.088, 200)
         self._sym_bw_win = qtgui.RangeWidget(self._sym_bw_range, self.set_sym_bw, "symbol loop bw", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._sym_bw_win)
         self._excess_bw_range = qtgui.Range(0.1, 0.6, 0.05, 0.35, 200)
@@ -164,229 +164,15 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         self._costas_bw_range = qtgui.Range(0.01, 0.08, 0.01, 0.06, 200)
         self._costas_bw_win = qtgui.RangeWidget(self._costas_bw_range, self.set_costas_bw, "costas loop bw", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._costas_bw_win)
-        self._QT_gain_range = qtgui.Range(0, 73, 1, 50, 200)
-        self._QT_gain_win = qtgui.RangeWidget(self._QT_gain_range, self.set_QT_gain, "RX_gain", "eng_slider", float, QtCore.Qt.Horizontal)
-        self.top_layout.addWidget(self._QT_gain_win)
         self.vocoder_codec2_decode_ps_0 = vocoder.codec2_decode_ps(codec2.MODE_2400)
-        self._tx_gain_range = qtgui.Range(0, 89, 1, 60, 200)
+        self._tx_gain_range = qtgui.Range(0, 89, 1, 89, 200)
         self._tx_gain_win = qtgui.RangeWidget(self._tx_gain_range, self.set_tx_gain, "Tx gain", "counter_slider", float, QtCore.Qt.Horizontal)
         self.top_layout.addWidget(self._tx_gain_win)
-        self.soapy_plutosdr_source_0 = None
-        dev = 'driver=plutosdr'
-        stream_args = ''
-        tune_args = ['']
-        settings = ['']
-
-        self.soapy_plutosdr_source_0 = soapy.source(dev, "fc32", 1, '',
-                                  stream_args, tune_args, settings)
-        self.soapy_plutosdr_source_0.set_sample_rate(0, samp_rate)
-        self.soapy_plutosdr_source_0.set_bandwidth(0, 1000000)
-        self.soapy_plutosdr_source_0.set_gain_mode(0, False)
-        self.soapy_plutosdr_source_0.set_frequency(0, frequency)
-        self.soapy_plutosdr_source_0.set_gain(0, min(max(QT_gain, 0.0), 73.0))
-        self.soapy_plutosdr_sink_0 = None
-        dev = 'driver=plutosdr'
-        stream_args = ''
-        tune_args = ['']
-        settings = ['']
-
-        self.soapy_plutosdr_sink_0 = soapy.sink(dev, "fc32", 1, '',
-                                  stream_args, tune_args, settings)
-        self.soapy_plutosdr_sink_0.set_sample_rate(0, samp_rate)
-        self.soapy_plutosdr_sink_0.set_bandwidth(0, 1000000)
-        self.soapy_plutosdr_sink_0.set_frequency(0, frequency)
-        self.soapy_plutosdr_sink_0.set_gain(0, min(max(89, 0.0), 89.0))
         self.rational_resampler_xxx_0 = filter.rational_resampler_fff(
                 interpolation=6,
                 decimation=1,
                 taps=[],
                 fractional_bw=0.400)
-        self.qtgui_waterfall_sink_x_0 = qtgui.waterfall_sink_c(
-            1024, #size
-            window.WIN_BLACKMAN_hARRIS, #wintype
-            0, #fc
-            samp_rate, #bw
-            "", #name
-            1, #number of inputs
-            None # parent
-        )
-        self.qtgui_waterfall_sink_x_0.set_update_time(0.10)
-        self.qtgui_waterfall_sink_x_0.enable_grid(False)
-        self.qtgui_waterfall_sink_x_0.enable_axis_labels(True)
-
-
-
-        labels = ['', '', '', '', '',
-                  '', '', '', '', '']
-        colors = [0, 0, 0, 0, 0,
-                  0, 0, 0, 0, 0]
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-                  1.0, 1.0, 1.0, 1.0, 1.0]
-
-        for i in range(1):
-            if len(labels[i]) == 0:
-                self.qtgui_waterfall_sink_x_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_waterfall_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_waterfall_sink_x_0.set_color_map(i, colors[i])
-            self.qtgui_waterfall_sink_x_0.set_line_alpha(i, alphas[i])
-
-        self.qtgui_waterfall_sink_x_0.set_intensity_range(-140, 10)
-
-        self._qtgui_waterfall_sink_x_0_win = sip.wrapinstance(self.qtgui_waterfall_sink_x_0.qwidget(), Qt.QWidget)
-
-        self.top_layout.addWidget(self._qtgui_waterfall_sink_x_0_win)
-        self.qtgui_time_sink_x_1_0_0_0 = qtgui.time_sink_f(
-            200, #size
-            samp_rate/sps, #samp_rate
-            'after interleaver', #name
-            1, #number of inputs
-            None # parent
-        )
-        self.qtgui_time_sink_x_1_0_0_0.set_update_time(0.1)
-        self.qtgui_time_sink_x_1_0_0_0.set_y_axis(0, 255)
-
-        self.qtgui_time_sink_x_1_0_0_0.set_y_label('Amplitude', "gooo gooo")
-
-        self.qtgui_time_sink_x_1_0_0_0.enable_tags(True)
-        self.qtgui_time_sink_x_1_0_0_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.01, 0.0, 0, "")
-        self.qtgui_time_sink_x_1_0_0_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_1_0_0_0.enable_grid(True)
-        self.qtgui_time_sink_x_1_0_0_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_1_0_0_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_1_0_0_0.enable_stem_plot(False)
-
-
-        labels = ['Real', 'Imag', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 3, 1, 3, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(1):
-            if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_1_0_0_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_time_sink_x_1_0_0_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_1_0_0_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_1_0_0_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_1_0_0_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_1_0_0_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_1_0_0_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_1_0_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_1_0_0_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_1_0_0_0_win)
-        self.qtgui_time_sink_x_1_0_0 = qtgui.time_sink_f(
-            200, #size
-            samp_rate/sps, #samp_rate
-            'goo goo Symbols', #name
-            1, #number of inputs
-            None # parent
-        )
-        self.qtgui_time_sink_x_1_0_0.set_update_time(0.1)
-        self.qtgui_time_sink_x_1_0_0.set_y_axis(0, 255)
-
-        self.qtgui_time_sink_x_1_0_0.set_y_label('Amplitude', "gooo gooo")
-
-        self.qtgui_time_sink_x_1_0_0.enable_tags(True)
-        self.qtgui_time_sink_x_1_0_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.01, 0.0, 0, "")
-        self.qtgui_time_sink_x_1_0_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_1_0_0.enable_grid(True)
-        self.qtgui_time_sink_x_1_0_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_1_0_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_1_0_0.enable_stem_plot(False)
-
-
-        labels = ['Real', 'Imag', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 3, 1, 3, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(1):
-            if len(labels[i]) == 0:
-                self.qtgui_time_sink_x_1_0_0.set_line_label(i, "Data {0}".format(i))
-            else:
-                self.qtgui_time_sink_x_1_0_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_1_0_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_1_0_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_1_0_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_1_0_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_1_0_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_1_0_0_win = sip.wrapinstance(self.qtgui_time_sink_x_1_0_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_1_0_0_win)
-        self.qtgui_time_sink_x_1_0 = qtgui.time_sink_c(
-            256, #size
-            samp_rate/sps, #samp_rate
-            'Recovered Symbols', #name
-            1, #number of inputs
-            None # parent
-        )
-        self.qtgui_time_sink_x_1_0.set_update_time(0.1)
-        self.qtgui_time_sink_x_1_0.set_y_axis(-1.0, 1.0)
-
-        self.qtgui_time_sink_x_1_0.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_1_0.enable_tags(False)
-        self.qtgui_time_sink_x_1_0.set_trigger_mode(qtgui.TRIG_MODE_AUTO, qtgui.TRIG_SLOPE_POS, 0.01, 0.0, 0, "")
-        self.qtgui_time_sink_x_1_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_1_0.enable_grid(True)
-        self.qtgui_time_sink_x_1_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_1_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_1_0.enable_stem_plot(False)
-
-
-        labels = ['Real', 'Imag', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 3, 1, 3, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(2):
-            if len(labels[i]) == 0:
-                if (i % 2 == 0):
-                    self.qtgui_time_sink_x_1_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_1_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
-            else:
-                self.qtgui_time_sink_x_1_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_1_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_1_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_1_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_1_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_1_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_1_0_win = sip.wrapinstance(self.qtgui_time_sink_x_1_0.qwidget(), Qt.QWidget)
-        self.top_grid_layout.addWidget(self._qtgui_time_sink_x_1_0_win, 4, 0, 2, 1)
-        for r in range(4, 6):
-            self.top_grid_layout.setRowStretch(r, 1)
-        for c in range(0, 1):
-            self.top_grid_layout.setColumnStretch(c, 1)
         self.qtgui_time_sink_x_0_1 = qtgui.time_sink_f(
             1024, #size
             samp_rate, #samp_rate
@@ -435,64 +221,13 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
 
         self._qtgui_time_sink_x_0_1_win = sip.wrapinstance(self.qtgui_time_sink_x_0_1.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_time_sink_x_0_1_win)
-        self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
-            1024, #size
-            samp_rate, #samp_rate
-            "Transmit data", #name
-            1, #number of inputs
-            None # parent
-        )
-        self.qtgui_time_sink_x_0.set_update_time(0.10)
-        self.qtgui_time_sink_x_0.set_y_axis(-1, 1)
-
-        self.qtgui_time_sink_x_0.set_y_label('Amplitude', "")
-
-        self.qtgui_time_sink_x_0.enable_tags(True)
-        self.qtgui_time_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, 0, "")
-        self.qtgui_time_sink_x_0.enable_autoscale(False)
-        self.qtgui_time_sink_x_0.enable_grid(False)
-        self.qtgui_time_sink_x_0.enable_axis_labels(True)
-        self.qtgui_time_sink_x_0.enable_control_panel(False)
-        self.qtgui_time_sink_x_0.enable_stem_plot(False)
-
-
-        labels = ['Signal 1', 'Signal 2', 'Signal 3', 'Signal 4', 'Signal 5',
-            'Signal 6', 'Signal 7', 'Signal 8', 'Signal 9', 'Signal 10']
-        widths = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        colors = ['blue', 'red', 'green', 'black', 'cyan',
-            'magenta', 'yellow', 'dark red', 'dark green', 'dark blue']
-        alphas = [1.0, 1.0, 1.0, 1.0, 1.0,
-            1.0, 1.0, 1.0, 1.0, 1.0]
-        styles = [1, 1, 1, 1, 1,
-            1, 1, 1, 1, 1]
-        markers = [-1, -1, -1, -1, -1,
-            -1, -1, -1, -1, -1]
-
-
-        for i in range(2):
-            if len(labels[i]) == 0:
-                if (i % 2 == 0):
-                    self.qtgui_time_sink_x_0.set_line_label(i, "Re{{Data {0}}}".format(i/2))
-                else:
-                    self.qtgui_time_sink_x_0.set_line_label(i, "Im{{Data {0}}}".format(i/2))
-            else:
-                self.qtgui_time_sink_x_0.set_line_label(i, labels[i])
-            self.qtgui_time_sink_x_0.set_line_width(i, widths[i])
-            self.qtgui_time_sink_x_0.set_line_color(i, colors[i])
-            self.qtgui_time_sink_x_0.set_line_style(i, styles[i])
-            self.qtgui_time_sink_x_0.set_line_marker(i, markers[i])
-            self.qtgui_time_sink_x_0.set_line_alpha(i, alphas[i])
-
-        self._qtgui_time_sink_x_0_win = sip.wrapinstance(self.qtgui_time_sink_x_0.qwidget(), Qt.QWidget)
-        self.top_layout.addWidget(self._qtgui_time_sink_x_0_win)
         self.qtgui_const_sink_x_0 = qtgui.const_sink_c(
-            1024, #size
+            2048, #size
             'Synced Constellation', #name
             2, #number of inputs
             None # parent
         )
-        self.qtgui_const_sink_x_0.set_update_time(0.10)
+        self.qtgui_const_sink_x_0.set_update_time(0.20)
         self.qtgui_const_sink_x_0.set_y_axis((-1.5), 1.5)
         self.qtgui_const_sink_x_0.set_x_axis((-1.5), 1.5)
         self.qtgui_const_sink_x_0.set_trigger_mode(qtgui.TRIG_MODE_FREE, qtgui.TRIG_SLOPE_POS, 0.0, 0, "")
@@ -558,6 +293,19 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
             log=False,
             truncate=False)
         self.digital_constellation_decoder_cb_1 = digital.constellation_decoder_cb(qpsk)
+        self.digital_additive_scrambler_xx_0_0 = digital.additive_scrambler_bb(0x8A, 0x7F, 7, count=0, bits_per_byte=1, reset_tag_key="")
+        self.digital_additive_scrambler_xx_0 = digital.additive_scrambler_bb(0x8A, 0x7F, 7, count=0, bits_per_byte=1, reset_tag_key="")
+        self._data_tool_bar = Qt.QToolBar(self)
+
+        if None:
+            self._data_formatter = None
+        else:
+            self._data_formatter = lambda x: str(x)
+
+        self._data_tool_bar.addWidget(Qt.QLabel("data"))
+        self._data_label = Qt.QLabel(str(self._data_formatter(self.data)))
+        self._data_tool_bar.addWidget(self._data_label)
+        self.top_layout.addWidget(self._data_tool_bar)
         self.codec2488_0 = codec2488(
             Decimate=6,
             Interpolate=1,
@@ -571,14 +319,16 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         self.blocks_short_to_float_0 = blocks.short_to_float(1, 8192)
         self.blocks_repack_bits_bb_1_0 = blocks.repack_bits_bb(8, 1, 'packet', False, gr.GR_LSB_FIRST)
         self.blocks_repack_bits_bb_1 = blocks.repack_bits_bb(1, 8, 'packet', False, gr.GR_LSB_FIRST)
+        self.blocks_repack_bits_bb_0_0 = blocks.repack_bits_bb(1, 8, "packet_len", False, gr.GR_LSB_FIRST)
+        self.blocks_repack_bits_bb_0 = blocks.repack_bits_bb(8, 1, "packet_len", False, gr.GR_LSB_FIRST)
         self.blocks_multiply_const_vxx_2 = blocks.multiply_const_ff(1)
         self.blocks_multiply_const_vxx_1_0_0 = blocks.multiply_const_cc(tx_on)
-        self.blocks_multiply_const_vxx_1_0 = blocks.multiply_const_cc(1-tx_on)
         self.blocks_multiply_const_vxx_0 = blocks.multiply_const_cc(0.5)
-        self.blocks_char_to_float_0_0 = blocks.char_to_float(1, 1)
-        self.blocks_char_to_float_0 = blocks.char_to_float(1, 1)
         self.audio_source_0 = audio.source(48000, '', True)
         self.audio_sink_0 = audio.sink(48000, '', True)
+        self._QT_gain_range = qtgui.Range(0, 73, 1, 50, 200)
+        self._QT_gain_win = qtgui.RangeWidget(self._QT_gain_range, self.set_QT_gain, "RX_gain", "eng_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._QT_gain_win)
         self.Interleaver_simple_0 = Interleaver_simple(
             Columns=8,
             Rows=20,
@@ -603,21 +353,18 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         # Connections
         ##################################################
         self.connect((self.Deinterleaver_0, 0), (self.FEC_decoder_0, 0))
-        self.connect((self.Deinterleaver_0, 0), (self.blocks_char_to_float_0_0, 0))
         self.connect((self.FEC_ENCODE_0, 0), (self.Interleaver_simple_0, 0))
         self.connect((self.FEC_ENCODE_0, 0), (self.digital_protocol_formatter_bb_0, 0))
         self.connect((self.FEC_decoder_0, 0), (self.blocks_repack_bits_bb_1, 0))
         self.connect((self.Interleaver_simple_0, 0), (self.blocks_tagged_stream_mux_0, 2))
         self.connect((self.audio_source_0, 0), (self.blocks_multiply_const_vxx_2, 0))
-        self.connect((self.blocks_char_to_float_0, 0), (self.qtgui_time_sink_x_1_0_0, 0))
-        self.connect((self.blocks_char_to_float_0_0, 0), (self.qtgui_time_sink_x_1_0_0_0, 0))
         self.connect((self.blocks_multiply_const_vxx_0, 0), (self.blocks_multiply_const_vxx_1_0_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_1_0, 0), (self.filter_fft_rrc_filter_0, 0))
-        self.connect((self.blocks_multiply_const_vxx_1_0_0, 0), (self.soapy_plutosdr_sink_0, 0))
+        self.connect((self.blocks_multiply_const_vxx_1_0_0, 0), (self.filter_fft_rrc_filter_0, 0))
         self.connect((self.blocks_multiply_const_vxx_2, 0), (self.codec2488_0, 0))
+        self.connect((self.blocks_repack_bits_bb_0, 0), (self.digital_additive_scrambler_xx_0, 0))
+        self.connect((self.blocks_repack_bits_bb_0_0, 0), (self.digital_crc32_bb_0, 0))
         self.connect((self.blocks_repack_bits_bb_1, 0), (self.digital_crc32_bb_1, 0))
-        self.connect((self.blocks_repack_bits_bb_1_0, 0), (self.blocks_char_to_float_0, 0))
-        self.connect((self.blocks_repack_bits_bb_1_0, 0), (self.blocks_stream_to_vector_0, 0))
+        self.connect((self.blocks_repack_bits_bb_1_0, 0), (self.digital_additive_scrambler_xx_0_0, 0))
         self.connect((self.blocks_short_to_float_0, 0), (self.qtgui_time_sink_x_0_1, 0))
         self.connect((self.blocks_short_to_float_0, 0), (self.rational_resampler_xxx_0, 0))
         self.connect((self.blocks_stream_to_tagged_stream_0_0_0_0, 0), (self.blocks_tagged_stream_mux_0, 0))
@@ -625,14 +372,14 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         self.connect((self.blocks_tagged_stream_mux_0, 0), (self.digital_constellation_modulator_0, 0))
         self.connect((self.blocks_unpack_k_bits_bb_0, 0), (self.digital_correlate_access_code_xx_ts_0, 0))
         self.connect((self.blocks_vector_source_x_0, 0), (self.blocks_stream_to_tagged_stream_0_0_0_0, 0))
-        self.connect((self.codec2488_0, 0), (self.digital_crc32_bb_0, 0))
+        self.connect((self.codec2488_0, 0), (self.blocks_repack_bits_bb_0, 0))
+        self.connect((self.digital_additive_scrambler_xx_0, 0), (self.blocks_repack_bits_bb_0_0, 0))
+        self.connect((self.digital_additive_scrambler_xx_0_0, 0), (self.blocks_stream_to_vector_0, 0))
         self.connect((self.digital_constellation_decoder_cb_1, 0), (self.digital_diff_decoder_bb_0, 0))
         self.connect((self.digital_constellation_modulator_0, 0), (self.blocks_multiply_const_vxx_0, 0))
-        self.connect((self.digital_constellation_modulator_0, 0), (self.qtgui_time_sink_x_0, 0))
         self.connect((self.digital_correlate_access_code_xx_ts_0, 0), (self.Deinterleaver_0, 0))
         self.connect((self.digital_costas_loop_cc_0, 0), (self.digital_constellation_decoder_cb_1, 0))
         self.connect((self.digital_costas_loop_cc_0, 0), (self.qtgui_const_sink_x_0, 1))
-        self.connect((self.digital_costas_loop_cc_0, 0), (self.qtgui_time_sink_x_1_0, 0))
         self.connect((self.digital_crc32_bb_0, 0), (self.FEC_ENCODE_0, 0))
         self.connect((self.digital_crc32_bb_1, 0), (self.blocks_repack_bits_bb_1_0, 0))
         self.connect((self.digital_diff_decoder_bb_0, 0), (self.digital_map_bb_0, 0))
@@ -642,8 +389,6 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         self.connect((self.digital_symbol_sync_xx_0, 0), (self.qtgui_const_sink_x_0, 0))
         self.connect((self.filter_fft_rrc_filter_0, 0), (self.digital_symbol_sync_xx_0, 0))
         self.connect((self.rational_resampler_xxx_0, 0), (self.audio_sink_0, 0))
-        self.connect((self.soapy_plutosdr_source_0, 0), (self.blocks_multiply_const_vxx_1_0, 0))
-        self.connect((self.soapy_plutosdr_source_0, 0), (self.qtgui_waterfall_sink_x_0, 0))
         self.connect((self.vocoder_codec2_decode_ps_0, 0), (self.blocks_short_to_float_0, 0))
 
 
@@ -678,9 +423,6 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
         self.set_rxmod(digital.generic_mod(self.qpsk, True, self.sps, True, self.excess_bw, False, False))
         self.digital_symbol_sync_xx_0.set_sps(self.sps)
         self.filter_fft_rrc_filter_0.set_taps(firdes.root_raised_cosine(1, self.samp_rate, (self.samp_rate/self.sps), self.excess_bw, (11*self.sps)))
-        self.qtgui_time_sink_x_1_0.set_samp_rate(self.samp_rate/self.sps)
-        self.qtgui_time_sink_x_1_0_0.set_samp_rate(self.samp_rate/self.sps)
-        self.qtgui_time_sink_x_1_0_0_0.set_samp_rate(self.samp_rate/self.sps)
 
     def get_qpsk(self):
         return self.qpsk
@@ -704,7 +446,6 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
     def set_tx_on(self, tx_on):
         self.tx_on = tx_on
         self.set_rx_on(1-self.tx_on)
-        self.blocks_multiply_const_vxx_1_0.set_k(1-self.tx_on)
         self.blocks_multiply_const_vxx_1_0_0.set_k(self.tx_on)
 
     def get_rxmod(self):
@@ -757,14 +498,7 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
         self.filter_fft_rrc_filter_0.set_taps(firdes.root_raised_cosine(1, self.samp_rate, (self.samp_rate/self.sps), self.excess_bw, (11*self.sps)))
-        self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
         self.qtgui_time_sink_x_0_1.set_samp_rate(self.samp_rate)
-        self.qtgui_time_sink_x_1_0.set_samp_rate(self.samp_rate/self.sps)
-        self.qtgui_time_sink_x_1_0_0.set_samp_rate(self.samp_rate/self.sps)
-        self.qtgui_time_sink_x_1_0_0_0.set_samp_rate(self.samp_rate/self.sps)
-        self.qtgui_waterfall_sink_x_0.set_frequency_range(0, self.samp_rate)
-        self.soapy_plutosdr_sink_0.set_sample_rate(0, self.samp_rate)
-        self.soapy_plutosdr_source_0.set_sample_rate(0, self.samp_rate)
 
     def get_rx_on(self):
         return self.rx_on
@@ -804,8 +538,6 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
 
     def set_frequency(self, frequency):
         self.frequency = frequency
-        self.soapy_plutosdr_sink_0.set_frequency(0, self.frequency)
-        self.soapy_plutosdr_source_0.set_frequency(0, self.frequency)
 
     def get_enc_cc(self):
         return self.enc_cc
@@ -820,6 +552,13 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
     def set_dec_cc(self, dec_cc):
         self.dec_cc = dec_cc
         self.FEC_decoder_0.set_cc_decoder_def(self.dec_cc)
+
+    def get_data(self):
+        return self.data
+
+    def set_data(self, data):
+        self.data = data
+        Qt.QMetaObject.invokeMethod(self._data_label, "setText", Qt.Q_ARG("QString", str(self._data_formatter(self.data))))
 
     def get_costas_bw(self):
         return self.costas_bw
@@ -839,7 +578,6 @@ class bpsk_file_transfer_loopback2_Pluto(gr.top_block, Qt.QWidget):
 
     def set_QT_gain(self, QT_gain):
         self.QT_gain = QT_gain
-        self.soapy_plutosdr_source_0.set_gain(0, min(max(self.QT_gain, 0.0), 73.0))
 
     def get_FEC_frameBits(self):
         return self.FEC_frameBits
